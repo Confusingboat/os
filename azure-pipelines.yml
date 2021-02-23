@@ -1,0 +1,26 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- v1.5.x-kernel-5.10
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: CmdLine@2
+  inputs:
+    script: 'make release'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(agent.builddirectory)/dist/artifacts'
+    Contents: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
