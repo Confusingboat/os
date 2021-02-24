@@ -8,13 +8,13 @@ steps:
 
 - script: |
     UEFI_DIR_NAME=build_uefi
-    #UEFI_DIR=$(build.sourcesdirectory)/$(UEFI_DIR_NAME) 
-    #mkdir $(UEFI_DIR)
-    #cd $(UEFI_DIR)
-    #cp $(build.sourcesdirectory)/dist/artifacts/rancheros.iso $(UEFI_DIR) 
-    #wget -O make-uefi.sh https://raw.githubusercontent.com/Confusingboat/ros-uefi/master/make-uefi.sh
-    #chmod +x make-uefi.sh
-    #make-uefi.sh && cp tmp/
+    UEFI_DIR=$(build.sourcesdirectory)/$(UEFI_DIR_NAME) 
+    mkdir $(UEFI_DIR)
+    cd $(UEFI_DIR)
+    cp $(build.sourcesdirectory)/dist/artifacts/rancheros.iso $(UEFI_DIR) 
+    wget -O make-uefi.sh https://raw.githubusercontent.com/Confusingboat/ros-uefi/master/make-uefi.sh
+    chmod +x make-uefi.sh
+    make-uefi.sh
 
 - task: CopyFiles@2
   inputs:
@@ -22,8 +22,20 @@ steps:
     Contents: '**'
     TargetFolder: '$(build.artifactstagingdirectory)/rancheros'
 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)/build_uefi/tmp/iso'
+    Contents: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)/rancheros-uefi'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/rancheros'
     ArtifactName: 'rancheros'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/rancheros-uefi'
+    ArtifactName: 'rancheros-uefi'
     publishLocation: 'Container'
