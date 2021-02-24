@@ -1,17 +1,14 @@
 trigger:
-- master
 - v1.5.x-kernel-5.10
 
 pool: Default
 
 steps:
-- task: CmdLine@2
-  inputs:
-    script: 'make release'
+- script: 'make release'
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(agent.builddirectory)/dist/artifacts'
+    SourceFolder: '$(agent.sourcedirectory)/dist/artifacts'
     Contents: '**'
     TargetFolder: '$(build.artifactstagingdirectory)'
 - task: PublishBuildArtifacts@1
