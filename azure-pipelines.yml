@@ -8,7 +8,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(agent.sourcedirectory)/dist/artifacts'
+    SourceFolder: '$(build.sourcesdirectory)/dist/artifacts'
     Contents: '**'
     TargetFolder: '$(build.artifactstagingdirectory)'
 - task: PublishBuildArtifacts@1
