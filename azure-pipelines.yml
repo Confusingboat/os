@@ -7,14 +7,12 @@ steps:
 - script: 'make release'
 
 - script: |
-    UEFI_DIR_NAME=build_uefi
-    UEFI_DIR=$(build.sourcesdirectory)/$(UEFI_DIR_NAME) 
-    mkdir $(UEFI_DIR)
-    cd $(UEFI_DIR)
-    cp $(build.sourcesdirectory)/dist/artifacts/rancheros.iso $(UEFI_DIR) 
-    wget -O make-uefi.sh https://raw.githubusercontent.com/Confusingboat/ros-uefi/master/make-uefi.sh
+    cd $(build.sourcesdirectory)
+    git clone https://github.com/Confusingboat/ros-uefi
+    cp $(build.sourcesdirectory)/dist/artifacts/rancheros.iso $(build.sourcesdirectory)/ros-uefi/rancheros.iso
+    cd ros-uefi
     chmod +x make-uefi.sh
-    make-uefi.sh
+    ./make-uefi.sh
 
 - task: CopyFiles@2
   inputs:
@@ -24,7 +22,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(build.sourcesdirectory)/build_uefi/tmp/iso'
+    SourceFolder: '$(build.sourcesdirectory)/ros-uefi/tmp/iso'
     Contents: '**'
     TargetFolder: '$(build.artifactstagingdirectory)/rancheros-uefi'
 
