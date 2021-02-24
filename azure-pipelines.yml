@@ -6,13 +6,24 @@ pool: Default
 steps:
 - script: 'make release'
 
+- script: |
+    UEFI_DIR_NAME=build_uefi
+    #UEFI_DIR=$(build.sourcesdirectory)/$(UEFI_DIR_NAME) 
+    #mkdir $(UEFI_DIR)
+    #cd $(UEFI_DIR)
+    #cp $(build.sourcesdirectory)/dist/artifacts/rancheros.iso $(UEFI_DIR) 
+    #wget -O make-uefi.sh https://raw.githubusercontent.com/Confusingboat/ros-uefi/master/make-uefi.sh
+    #chmod +x make-uefi.sh
+    #make-uefi.sh && cp tmp/
+
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(build.sourcesdirectory)/dist/artifacts'
     Contents: '**'
-    TargetFolder: '$(build.artifactstagingdirectory)'
+    TargetFolder: '$(build.artifactstagingdirectory)/rancheros'
+
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/rancheros'
+    ArtifactName: 'rancheros'
     publishLocation: 'Container'
